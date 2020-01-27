@@ -1,0 +1,87 @@
+@import '../variables.scss';
+
+.Header {
+  width: 100%;
+  display: flex;
+  background-color: #FFF;
+  border-bottom: solid 1px;
+  border-color: #D7D7D9;
+  position: sticky;
+  top: 0px;
+  border-top-left-radius: inherit;
+  border-top-right-radius: inherit;
+  box-sizing: border-box;
+  padding: 15px $horizontalPadding;
+
+  .header-col-1, .header-col-2 {
+    flex-basis: 100%;
+    white-space: nowrap;
+    border-color: inherit;
+
+    > * {
+      display: inline-block;
+      margin-right: 15px;
+
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+
+  .header-col-1 {
+    margin-right: 45px;
+
+    > .Dropmenu {
+      width: 33.3333% !important;
+      max-width: 130px;
+    }
+  }
+
+  .header-col-2 {
+    flex-basis: auto;
+    text-align: right;
+  }
+}
+
+
+// Header responsive styles
+@media screen and (max-width: 520px) {
+  .Header {
+    padding: 0;
+
+    .header-col-1, .header-col-2 {
+      > * {
+        margin-right: 0;
+        box-shadow: none;
+        border-radius: 0;
+        border-left-style: solid;
+        border-left-width: 1px;
+        border-color: inherit;
+      }
+    }
+
+    .header-col-1 {
+      margin-right: 0;
+    }
+    
+    .Dropmenu {
+      font-size: 12px;
+
+      select {
+        padding-left: 5px;
+      }
+
+      svg {
+        margin-right: 5px;
+      }
+    }
+
+    .Button {
+      width: 35px;
+
+      svg {
+        font-size: 12px;
+      }
+    }
+  }
+}

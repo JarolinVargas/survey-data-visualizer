@@ -1,0 +1,13 @@
+@import '../variables.scss';
+
+.Button {
+    width: 45px;
+    height: 45px;
+    line-height: 45px;
+    background-color: #FFF;
+    cursor: pointer;
+    position: relative;
+    text-align: center;
+    box-shadow: $buttonsBoxShadow;
+    border-radius: $buttonsBorderRadius;
+}
