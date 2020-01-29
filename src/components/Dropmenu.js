@@ -7,18 +7,11 @@ export default function Dropmenu(props) {
     return (
         <div className="Dropmenu">
             <select>
-                <option>{props.defaultLabel}</option>
-                <option>September</option>
-                <option>January</option>
-                <option>January</option>
-                <option>January</option>
-                <option>January</option>
-                <option>January</option>
-                <option>January</option>
-                <option>January</option>
-                <option>January</option>
-                <option>January</option>
-                <option>January</option>
+                {
+                    props.options.map((M, i) => {
+                        return <option key={i} value={M}>{M}</option>
+                    })
+                }
             </select>
             <FontAwesomeIcon icon={faSort} />
         </div>

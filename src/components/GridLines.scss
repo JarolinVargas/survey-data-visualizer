@@ -20,6 +20,7 @@
         font-weight: 600;
         background-color: #D7D7D9;
 
+        // line number is rendered as pseudo element and taken from the data-value attribute
         &:before {
             content: attr(data-value);
             margin-left: 50%;
