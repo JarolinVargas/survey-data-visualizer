@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import useFetch from 'use-http';
 import './App.scss';
 import Header from './components/Header.js';
@@ -12,6 +12,9 @@ export default function App() {
   const [request, response] = useFetch(url);
   const {loading, error, data} = useFetch(url, []); // api request onMount
   const [monthsAndDays, setMonthsAndDays] = useState(null);
+  const [selectedMonth, selectMonth] = useState('');
+  const [selectedDay, selectDay] = useState('');
+  const [candidates, setCandidates] = useState([]);
   
   const refetchData = () => {
     setMonthsAndDays(null);
@@ -19,27 +22,40 @@ export default function App() {
   }
 
   // Create object structured to store months and days
-  if( data && monthsAndDays === null ) {
-    let monthsAndDaysObj = {months: []}
-    data.map(data => {
-      data.map(array => {
-        const [day, month] = array[0].split('-'); // '26-March' -> [26, March]
-        if( actualMonths.includes(month) ) {
-          // add empty array to month if not already present, then add the day to the array.
-          !monthsAndDaysObj.months[month] && (monthsAndDaysObj.months[month] = []);
-          !monthsAndDaysObj.months.includes && monthsAndDaysObj.months.push(month);
-          monthsAndDaysObj.months[month].push(day);
-        }
+  if( data ) {
+    if( monthsAndDays === null ) {
+      let monthsAndDaysObj = {months: []}
+      data.map(data => {
+        data.map(array => {
+          const [day, month] = array[0].split('-'); // '26-March' -> [26, March]
+          if( actualMonths.includes(month) ) {
+            // add empty array to month if not already present, then add the day to the array.
+            !monthsAndDaysObj.months[month] && (monthsAndDaysObj.months[month] = []);
+            !monthsAndDaysObj.months.includes && monthsAndDaysObj.months.push(month);
+            monthsAndDaysObj.months[month].push(day);
+          }
+        });
       });
-    });
-    setMonthsAndDays(monthsAndDaysObj);
+      setMonthsAndDays(monthsAndDaysObj);
+      // select the first month and day as default
+      const firstMonth = Object.keys(monthsAndDaysObj.months)[0];
+      const firstDay = monthsAndDaysObj.months[firstMonth][0];
+      selectMonth(firstMonth);
+      selectDay(firstDay);
+    }
+
+    // Candidates array
+    if( !candidates.length ) {
+      const candidatesArray = data[0][0];
+      setCandidates(candidatesArray)
+    }
   }
 
   return (
     <div className="App">
-      <Header selectOptions={monthsAndDays} refetchData={refetchData}/>
-      <Heading/>
-      <Graph/>
+      <Header selectOptions={monthsAndDays} selectedMonth={selectedMonth} selectedDay={selectedDay} selectMonthHandler={selectMonth} selectDayHandler={selectDay} refetchData={refetchData}/>
+      <Heading title={`${selectedMonth} ${selectedDay}`} subtitle="Poll Results For"/>
+      <Graph candidates={candidates} selection={`${selectedDay}-${selectedMonth}`} data={data && data[0]}/>
     </div>
   );
 }

@@ -1,11 +1,11 @@
 import React from 'react';
 import './Heading.scss';
 
-export default function Heading() {
+export default function Heading(props) {
     return (
         <h1 className="Heading">
-            <span>Poll Results For</span>
-            February 21
+            <span>{props.subtitle}</span>
+            {props.title}
         </h1>
     )
 }

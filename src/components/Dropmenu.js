@@ -6,10 +6,10 @@ import {faSort} from '@fortawesome/free-solid-svg-icons';
 export default function Dropmenu(props) {
     return (
         <div className="Dropmenu">
-            <select>
+            <select value={props.selectedOption} onChange={(event) => props.optionChanged(event.target.value)}>
                 {
-                    props.options.map((M, i) => {
-                        return <option key={i} value={M}>{M}</option>
+                    props.options.map((o, i) => {
+                        return <option key={i} value={o}>{o}</option>
                     })
                 }
             </select>
