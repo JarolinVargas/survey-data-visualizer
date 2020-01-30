@@ -6,7 +6,7 @@ export default function Bar(props) {
         <div className="Bar">
             <div className="bar-img"><img src={props.img}/></div>
             <div className="bar-container">
-                <label>{props.value}% - {props.label}</label>
+                <label><strong>{props.value}%</strong> - {props.label}</label>
                 <progress value={props.value} max={props.max}></progress>
             </div>
         </div>

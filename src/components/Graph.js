@@ -5,6 +5,8 @@ import GridLines from './GridLines.js';
 import bernie from '../assets/candidates-2020/bernie-sanders.jpg'
 
 export default function Graph(props) {
+    const max = 40;
+
     let selectionArray = [];
     if( props.data ) {
         props.data.map(arr => {
@@ -18,10 +20,10 @@ export default function Graph(props) {
         <main className="Graph">
             {
                 props.candidates.map((c, i) => {
-                    return c !== 'all' && selectionArray[i] !== '' && <Bar label={c} value={selectionArray[i]} max={100} img={bernie} key={i}/>
+                    return c !== 'all' && selectionArray[i] !== '' && <Bar label={c} value={!selectionArray[i] ? 0 : selectionArray[i]} max={max} img={bernie} key={i}/>
                 })
             }
-            <GridLines min={0} max={100}/>
+            <GridLines min={0} max={max}/>
         </main>
     )
 }

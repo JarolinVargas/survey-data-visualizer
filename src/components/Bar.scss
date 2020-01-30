@@ -37,7 +37,7 @@ $barHeight: 50px;
         appearance: none;
 
         &::-webkit-progress-bar {
-            background-color: #032D50;
+            background-color: #F7F7F9;
             border-top-right-radius: $barHeight;
             border-bottom-right-radius: $barHeight;
         }
@@ -52,5 +52,15 @@ $barHeight: 50px;
         left: 15px;
         color: #FFF;
         line-height: $barHeight;
+        font-weight: 500;
+        padding-left: 70px;
+        white-space: nowrap;
+        mix-blend-mode: difference;
+
+        strong {
+            font-size: 28px;
+            position: absolute;
+            left: 0px;
+        }
     }
 }

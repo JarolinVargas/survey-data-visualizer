@@ -21,8 +21,14 @@ export default function App() {
     request.get();
   }
 
-  // Create object structured to store months and days
+  // select the first day after selecting a month
+  const selectMonthHandler = (month) => {
+    selectMonth(month);
+    selectDay(monthsAndDays['months'][month][0]); 
+  }
+
   if( data ) {
+    // Create object structured to store months and days
     if( monthsAndDays === null ) {
       let monthsAndDaysObj = {months: []}
       data.map(data => {
@@ -53,7 +59,7 @@ export default function App() {
 
   return (
     <div className="App">
-      <Header selectOptions={monthsAndDays} selectedMonth={selectedMonth} selectedDay={selectedDay} selectMonthHandler={selectMonth} selectDayHandler={selectDay} refetchData={refetchData}/>
+      <Header selectOptions={monthsAndDays} selectedMonth={selectedMonth} selectedDay={selectedDay} selectMonthHandler={selectMonthHandler} selectDayHandler={selectDay} refetchData={refetchData}/>
       <Heading title={`${selectedMonth} ${selectedDay}`} subtitle="Poll Results For"/>
       <Graph candidates={candidates} selection={`${selectedDay}-${selectedMonth}`} data={data && data[0]}/>
     </div>
