@@ -14,6 +14,7 @@ export default function App() {
   const [monthsAndDays, setMonthsAndDays] = useState(null);
   const [selectedMonth, selectMonth] = useState('');
   const [selectedDay, selectDay] = useState('');
+  const [sortBy, setSortBy] = useState('Name');
   const [candidates, setCandidates] = useState([]);
   
   const refetchData = () => {
@@ -59,9 +60,9 @@ export default function App() {
 
   return (
     <div className="App">
-      <Header selectOptions={monthsAndDays} selectedMonth={selectedMonth} selectedDay={selectedDay} selectMonthHandler={selectMonthHandler} selectDayHandler={selectDay} refetchData={refetchData}/>
+      <Header selectOptions={monthsAndDays} selectedMonth={selectedMonth} selectedDay={selectedDay} selectMonthHandler={selectMonthHandler} selectDayHandler={selectDay} sortBy={sortBy} sortByHandler={setSortBy} refetchData={refetchData}/>
       <Heading title={`${selectedMonth} ${selectedDay}`} subtitle="Poll Results For"/>
-      <Graph candidates={candidates} selection={`${selectedDay}-${selectedMonth}`} data={data && data[0]}/>
+      <Graph candidates={candidates} selection={`${selectedDay}-${selectedMonth}`} sortBy={sortBy} data={data && data[0]}/>
     </div>
   );
 }

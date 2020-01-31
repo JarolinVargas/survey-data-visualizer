@@ -2,20 +2,24 @@ import React from 'react';
 import './GridLines.scss';
 
 export default function GridLines(props) {
+    const [increments, spacingIncrements] = [[],[]];
+    for( let i = 0; i <= props.max; i += 5 ) {
+        increments.push(i);
+    }
+    const spacing = 100 / (increments.length - 1);
+    //const spacingIncrements = [];
+    for( let i = 0; i < increments.length; i++ ) {
+        spacingIncrements.push(spacing * i);
+    }
+
     return (
         <div className="GridLines">
             <div className="grid-view">
-                <div className="grid-line" data-value={0} style={{left: `${0}%`}}></div>
-                <div className="grid-line" data-value={10} style={{left: `${10}%`}}></div>
-                <div className="grid-line" data-value={20} style={{left: `${20}%`}}></div>
-                <div className="grid-line" data-value={30} style={{left: `${30}%`}}></div>
-                <div className="grid-line" data-value={40} style={{left: `${40}%`}}></div>
-                <div className="grid-line" data-value={50} style={{left: `${50}%`}}></div>
-                <div className="grid-line" data-value={60} style={{left: `${60}%`}}></div>
-                <div className="grid-line" data-value={70} style={{left: `${70}%`}}></div>
-                <div className="grid-line" data-value={80} style={{left: `${80}%`}}></div>
-                <div className="grid-line" data-value={90} style={{left: `${90}%`}}></div>
-                <div className="grid-line" data-value={100} style={{left: `${100}%`}}></div>
+                {
+                    increments.map((x, i) => {
+                        return <div className="grid-line" data-value={increments[i]} style={{left: `${spacingIncrements[i]}%`}} key={i}></div>;
+                    })
+                }
             </div>
         </div>
     )

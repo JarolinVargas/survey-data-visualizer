@@ -13,7 +13,7 @@ export default function Header(props) {
       <div className="header-col-1">
         <Dropmenu options={!props.selectOptions ? [] : months} selectedOption={props.selectedMonth} optionChanged={props.selectMonthHandler}></Dropmenu>
         <Dropmenu options={!days ? [] : days} selectedOption={props.selectedDay} optionChanged={props.selectDayHandler}></Dropmenu>
-        <Dropmenu options={['Most popular', 'Least popular', 'Name']}></Dropmenu>
+        <Dropmenu options={['Name', 'Most popular', 'Least popular']} selectedOption={props.sortBy} optionChanged={props.sortByHandler}></Dropmenu>
       </div>
       <div className="header-col-2">
         <Button icon={faPlay}></Button>

@@ -33,4 +33,10 @@
         font-size: 16px;
         color: #D7D7D9;
     }
+
+    &:hover {
+        svg {
+            color: $primaryColor;
+        }
+    }
 }
