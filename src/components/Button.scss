@@ -11,4 +11,12 @@
     box-shadow: $buttonsBoxShadow;
     border-radius: $subtleBorderRadius;
     color: $primaryColor;
+
+    &.disabled {
+        cursor: not-allowed;
+
+        svg {
+            color: #D7D7D9;
+        }
+    }
 }

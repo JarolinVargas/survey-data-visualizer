@@ -2,7 +2,6 @@ import React from 'react';
 import './Graph.scss';
 import Bar from './Bar.js';
 import GridLines from './GridLines.js';
-import bernie from '../assets/candidates-2020/bernie-sanders.jpg'
 
 export default function Graph(props) {
     const [min, max] = [0, 40];
@@ -16,8 +15,8 @@ export default function Graph(props) {
         });
     }
 
-    const bars = props.candidates.map((c, i) => {
-        return c !== 'all' && selectionArray[i] !== '' && <Bar label={c} value={!selectionArray[i] ? 0 : selectionArray[i]} max={max} img={bernie} key={i}/>
+    const bars = props.graphItems['label'].map((c, i) => {
+        return c !== 'all' && <Bar label={c} value={!selectionArray[i] ? 0 : selectionArray[i]} max={max} img={props.graphItems['image'][i]} hide={selectionArray[i] === '' ? true : false} key={i}/>
     }).filter(a => a !== false);
 
     // sort based on user selection

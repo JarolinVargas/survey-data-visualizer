@@ -2,12 +2,11 @@ import React from 'react';
 import './GridLines.scss';
 
 export default function GridLines(props) {
-    const [increments, spacingIncrements] = [[],[]];
+    const [increments, spacingIncrements] = [[], []];
     for( let i = 0; i <= props.max; i += 5 ) {
         increments.push(i);
     }
     const spacing = 100 / (increments.length - 1);
-    //const spacingIncrements = [];
     for( let i = 0; i < increments.length; i++ ) {
         spacingIncrements.push(spacing * i);
     }

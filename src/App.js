@@ -7,15 +7,16 @@ import Heading from './components/Heading.js';
 
 const url = 'https://api.myjson.com/bins/bxobk';
 const actualMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+let autoPlayInterval = null;
 
 export default function App() {
-  const [request, response] = useFetch(url);
-  const {loading, error, data} = useFetch(url, []); // api request onMount
+  const {request, response, loading, error, data} = useFetch(url, []); // api request onMount
   const [monthsAndDays, setMonthsAndDays] = useState(null);
   const [selectedMonth, selectMonth] = useState('');
   const [selectedDay, selectDay] = useState('');
   const [sortBy, setSortBy] = useState('Name');
-  const [candidates, setCandidates] = useState([]);
+  const [graphItems, setGraphItems] = useState({label: [], image: []});
+  const [autoPlay, setAutoPlay] = useState(false);
   
   const refetchData = () => {
     setMonthsAndDays(null);
@@ -26,6 +27,37 @@ export default function App() {
   const selectMonthHandler = (month) => {
     selectMonth(month);
     selectDay(monthsAndDays['months'][month][0]); 
+  }
+
+  // autoplay
+  const toggleAutoPlay = () => {
+    if( !autoPlayInterval ) {
+      let currentMonth = Object.keys(monthsAndDays.months)[0];
+      let currentMonthIndex = 0;
+      let currentDayIndex = 0;
+      selectMonthHandler(currentMonth);
+      autoPlayInterval = window.setInterval(() => {
+        try {
+          currentDayIndex++;
+          if( monthsAndDays['months'][currentMonth][currentDayIndex] === undefined ) {
+            currentMonthIndex++;
+            currentMonth = Object.keys(monthsAndDays['months'])[currentMonthIndex];
+            currentDayIndex = 0;
+            selectMonth(currentMonth);
+          }
+          selectDay(monthsAndDays['months'][currentMonth][currentDayIndex])
+        } catch {
+          window.clearInterval(autoPlayInterval);
+          selectMonthHandler(Object.keys(monthsAndDays.months)[0]);
+          setAutoPlay(false);
+        }
+      }, 1000);
+      setAutoPlay(true);
+    } else {
+      window.clearInterval(autoPlayInterval);
+      autoPlayInterval = null;
+      setAutoPlay(false);
+    }
   }
 
   if( data ) {
@@ -51,18 +83,36 @@ export default function App() {
       selectDay(firstDay);
     }
 
-    // Candidates array
-    if( !candidates.length ) {
-      const candidatesArray = data[0][0];
-      setCandidates(candidatesArray)
+    // graph items array
+    if( !graphItems.label.length ) {
+      const graphItemsLabel = data[0][0];
+      const graphItemsImages = graphItemsLabel.map((item, i) => {
+        try {
+          return require(`./assets/candidates-2020/${graphItemsLabel[i].toLowerCase().replace(' ', '-')}.jpg`);
+        } catch(e) {
+          return require('./assets/candidates-2020/missing.png');
+        }
+      });
+      setGraphItems({label: graphItemsLabel, image: graphItemsImages});
     }
   }
 
   return (
     <div className="App">
-      <Header selectOptions={monthsAndDays} selectedMonth={selectedMonth} selectedDay={selectedDay} selectMonthHandler={selectMonthHandler} selectDayHandler={selectDay} sortBy={sortBy} sortByHandler={setSortBy} refetchData={refetchData}/>
+      <Header
+        selectOptions={monthsAndDays}
+        selectedMonth={selectedMonth}
+        selectedDay={selectedDay}
+        selectMonthHandler={selectMonthHandler}
+        selectDayHandler={selectDay}
+        sortBy={sortBy}
+        sortByHandler={setSortBy}
+        refetchData={refetchData}
+        autoPlay={autoPlay}
+        toggleAutoPlay={toggleAutoPlay}
+      />
       <Heading title={`${selectedMonth} ${selectedDay}`} subtitle="Poll Results For"/>
-      <Graph candidates={candidates} selection={`${selectedDay}-${selectedMonth}`} sortBy={sortBy} data={data && data[0]}/>
+      <Graph graphItems={graphItems} selection={`${selectedDay}-${selectedMonth}`} sortBy={sortBy} data={data && data[0]}/>
     </div>
   );
 }
