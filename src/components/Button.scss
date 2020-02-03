@@ -12,6 +12,10 @@
     border-radius: $subtleBorderRadius;
     color: $primaryColor;
 
+    &:active {
+        transform: scale(0.95);
+    }
+
     &.disabled {
         cursor: not-allowed;
 

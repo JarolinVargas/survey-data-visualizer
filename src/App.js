@@ -4,16 +4,15 @@ import './App.scss';
 import Header from './components/Header.js';
 import Graph from './components/Graph.js';
 import Heading from './components/Heading.js';
+import StatusMessage from './components/StatusMessage.js';
 
-const url = 'https://api.myjson.com/bins/bxobk';
 const actualMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 let autoPlayInterval = null;
 
 export default function App() {
-  const {request, response, loading, error, data} = useFetch(url, []); // api request onMount
+  const {request, loading, error, data} = useFetch('https://api.myjson.com/bins/bxobk', []); // api request onMount
   const [monthsAndDays, setMonthsAndDays] = useState(null);
-  const [selectedMonth, selectMonth] = useState('');
-  const [selectedDay, selectDay] = useState('');
+  const [selectedMonthAndDay, selectMonthAndDay] = useState({month: '', day: ''});
   const [sortBy, setSortBy] = useState('Name');
   const [graphItems, setGraphItems] = useState({label: [], image: []});
   const [autoPlay, setAutoPlay] = useState(false);
@@ -23,32 +22,35 @@ export default function App() {
     request.get();
   }
 
-  // select the first day after selecting a month
   const selectMonthHandler = (month) => {
-    selectMonth(month);
-    selectDay(monthsAndDays['months'][month][0]); 
+    selectMonthAndDay({month: month, day: monthsAndDays['months'][month][0]}); // select the first day of the selected month
+  }
+
+  const selectDayHandler = (day) => {
+    selectMonthAndDay({month: selectedMonthAndDay.month, day: day});
   }
 
   // autoplay
   const toggleAutoPlay = () => {
-    if( !autoPlayInterval ) {
+    if( data && !autoPlayInterval ) {
       let currentMonth = Object.keys(monthsAndDays.months)[0];
-      let currentMonthIndex = 0;
-      let currentDayIndex = 0;
+      let [currentMonthIndex, currentDayIndex] = [0, 0];
       selectMonthHandler(currentMonth);
       autoPlayInterval = window.setInterval(() => {
         try {
           currentDayIndex++;
-          if( monthsAndDays['months'][currentMonth][currentDayIndex] === undefined ) {
+          if( !monthsAndDays['months'][currentMonth][currentDayIndex] ) {
             currentMonthIndex++;
             currentMonth = Object.keys(monthsAndDays['months'])[currentMonthIndex];
             currentDayIndex = 0;
-            selectMonth(currentMonth);
           }
-          selectDay(monthsAndDays['months'][currentMonth][currentDayIndex])
+          selectMonthAndDay({
+            month: currentMonth,
+            day: monthsAndDays['months'][currentMonth][currentDayIndex]
+          });
         } catch {
           window.clearInterval(autoPlayInterval);
-          selectMonthHandler(Object.keys(monthsAndDays.months)[0]);
+          autoPlayInterval = null;
           setAutoPlay(false);
         }
       }, 1000);
@@ -64,8 +66,8 @@ export default function App() {
     // Create object structured to store months and days
     if( monthsAndDays === null ) {
       let monthsAndDaysObj = {months: []}
-      data.map(data => {
-        data.map(array => {
+      data.forEach(data => {
+        data.forEach(array => {
           const [day, month] = array[0].split('-'); // '26-March' -> [26, March]
           if( actualMonths.includes(month) ) {
             // add empty array to month if not already present, then add the day to the array.
@@ -79,11 +81,10 @@ export default function App() {
       // select the first month and day as default
       const firstMonth = Object.keys(monthsAndDaysObj.months)[0];
       const firstDay = monthsAndDaysObj.months[firstMonth][0];
-      selectMonth(firstMonth);
-      selectDay(firstDay);
+      selectMonthAndDay({month: firstMonth, day: firstDay});
     }
 
-    // graph items array
+    // graph items array including label and image
     if( !graphItems.label.length ) {
       const graphItemsLabel = data[0][0];
       const graphItemsImages = graphItemsLabel.map((item, i) => {
@@ -101,18 +102,22 @@ export default function App() {
     <div className="App">
       <Header
         selectOptions={monthsAndDays}
-        selectedMonth={selectedMonth}
-        selectedDay={selectedDay}
+        selectedMonthAndDay={selectedMonthAndDay}
         selectMonthHandler={selectMonthHandler}
-        selectDayHandler={selectDay}
+        selectDayHandler={selectDayHandler}
         sortBy={sortBy}
         sortByHandler={setSortBy}
         refetchData={refetchData}
         autoPlay={autoPlay}
         toggleAutoPlay={toggleAutoPlay}
       />
-      <Heading title={`${selectedMonth} ${selectedDay}`} subtitle="Poll Results For"/>
-      <Graph graphItems={graphItems} selection={`${selectedDay}-${selectedMonth}`} sortBy={sortBy} data={data && data[0]}/>
+      {!loading && !error ?
+        <React.Fragment>
+          <Heading title={`${selectedMonthAndDay.month} ${selectedMonthAndDay.day}`} subtitle="Poll Results For"/>
+          <Graph graphItems={graphItems} selection={`${selectedMonthAndDay.day}-${selectedMonthAndDay.month}`} sortBy={sortBy} data={data && data[0]}/>
+        </React.Fragment>
+      : 
+        <StatusMessage message={loading === true ? 'Fetching data...' : error.toString()} icon={loading === true ? 'loading' : 'error'}/>}
     </div>
   );
 }

@@ -25,7 +25,7 @@ export default function Bar(props) {
 
     return (
         <motion.div className="Bar" initial={initial} animate={props.hide ? hide : show} transition={transitionSettings} positionTransition={transitionSettings}>
-            <div className="bar-img"><img src={props.img}/></div>
+            <div className="bar-img"><img src={props.img} alt={props.label}/></div>
             <div className="bar-container">
                 <label><strong>{props.value}%</strong> - {props.label}</label>
                 <progress value={props.value} max={props.max}></progress>

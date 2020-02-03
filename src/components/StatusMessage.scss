@@ -1,0 +1,25 @@
+@import '../variables.scss';
+
+.StatusMessage {
+    width: 100%;
+    padding: 150px 0px;
+    text-align: center;
+    font-size: 18px;
+
+    span {
+        display: block;
+    }
+
+    svg {
+        margin-bottom: 7px;
+        font-size: 1.35em;
+        
+        &[data-icon="spinner"] {
+            color: $primaryColor;
+        }
+        
+        &[data-icon="times"] {
+            color: #FF4E50;
+        }
+    }
+}

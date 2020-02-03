@@ -4,15 +4,21 @@ import Bar from './Bar.js';
 import GridLines from './GridLines.js';
 
 export default function Graph(props) {
-    const [min, max] = [0, 40];
+    let [min, max] = [0, 100];
     
     let selectionArray = [];
     if( props.data ) {
-        props.data.map(arr => {
+        props.data.forEach(arr => {
            if( arr.includes(props.selection) ) {
             selectionArray = arr;
            }
         });
+
+        // update the max number relative to the current selection
+        let selectionNumbers = selectionArray.filter(num => { return num.length && num == +num });
+        let selectionNumbersMax = Math.max(...selectionNumbers.map(Number));
+        let maxRoundUp = Math.ceil(selectionNumbersMax / 5) * 5;
+        max = maxRoundUp === selectionNumbersMax ? maxRoundUp + 5 : maxRoundUp;
     }
 
     const bars = props.graphItems['label'].map((c, i) => {
@@ -27,6 +33,12 @@ export default function Graph(props) {
         case 'Least popular':
             bars.sort((a, b) => a.props.value - b.props.value);
             break;
+        default:
+            bars.sort((a, b) => {
+                if (a.props.label < b.props.label) { return -1 }
+                if (a.props.label > b.props.label) { return 1 }
+                return 0;
+            });
     }
 
     return (

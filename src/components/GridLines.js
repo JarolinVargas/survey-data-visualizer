@@ -1,5 +1,6 @@
 import React from 'react';
 import './GridLines.scss';
+import {motion} from 'framer-motion';
 
 export default function GridLines(props) {
     const [increments, spacingIncrements] = [[], []];
@@ -16,7 +17,7 @@ export default function GridLines(props) {
             <div className="grid-view">
                 {
                     increments.map((x, i) => {
-                        return <div className="grid-line" data-value={increments[i]} style={{left: `${spacingIncrements[i]}%`}} key={i}></div>;
+                        return <motion.div className="grid-line" data-value={increments[i]} style={{left: `${spacingIncrements[i]}%`}} key={i} positionTransition={{duration: .50, ease: 'easeOut'}}></motion.div>;
                     })
                 }
             </div>
